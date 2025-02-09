@@ -1,8 +1,6 @@
 package toposort
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func SortDigraph(digraph map[string][]string) ([]string, error) {
 
@@ -17,23 +15,34 @@ func SortDigraph(digraph map[string][]string) ([]string, error) {
 
 	// start with empty results
 	sorted := make([]string, 0, len(indegree))
+	nodesWithoutInDegree := findOneIndegreeZero(indegree)
 
-	// repeat until there are no more nodes
-Next:
-	for len(indegree) > 0 {
-		for node, count := range indegree {
-			if count == 0 {
-				sorted = append(sorted, node)
-				delete(indegree, node)
-				for _, toNode := range digraph[node] {
-					indegree[toNode] -= 1
-				}
-				continue Next
+	// repeat while we can find a node with indegree 0
+	for len(nodesWithoutInDegree) > 0 {
+		node := nodesWithoutInDegree[len(nodesWithoutInDegree)-1]
+		nodesWithoutInDegree = nodesWithoutInDegree[:len(nodesWithoutInDegree)-1]
+		sorted = append(sorted, node)
+		delete(indegree, node)
+		for _, toNode := range digraph[node] {
+			indegree[toNode] -= 1
+			if indegree[toNode] == 0 {
+				nodesWithoutInDegree = append(nodesWithoutInDegree, toNode)
 			}
 		}
-		// there are no nodes with indegree 0, therefore there is a cycle
-		return nil, fmt.Errorf("digraph has a cycle. no topological sort exists.")
 	}
 
-	return sorted, nil
+	if len(indegree) == 0 {
+		return sorted, nil
+	}
+
+	return nil, fmt.Errorf("digraph has a cycle. no topological sort exists.")
+}
+
+func findOneIndegreeZero(indegree map[string]int) []string {
+	for node, count := range indegree {
+		if count == 0 {
+			return []string{node}
+		}
+	}
+	return nil
 }

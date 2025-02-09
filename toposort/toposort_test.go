@@ -40,7 +40,7 @@ func TestSortDigraph(t *testing.T) {
 				"d": {},
 				"b": {"c"},
 			},
-			expected: []string{"a", "b", "c", "d", "e"},
+			expected: []string{"a", "b", "c", "e", "d"},
 			hasError: false,
 		},
 	}
