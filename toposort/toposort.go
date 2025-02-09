@@ -6,7 +6,7 @@ import (
 
 func SortDigraph(digraph map[string][]string) ([]string, error) {
 
-	// figure out how many indegrees every node has
+	// count how many indegrees every node has
 	indegree := map[string]int{}
 	for fromNode, toNodes := range digraph {
 		indegree[fromNode] += 0
@@ -16,7 +16,7 @@ func SortDigraph(digraph map[string][]string) ([]string, error) {
 	}
 
 	// start with empty results
-	sorted := []string{}
+	sorted := make([]string, 0, len(indegree))
 
 	// repeat until there are no more nodes
 Next:

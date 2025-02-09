@@ -36,11 +36,11 @@ func TestSortDigraph(t *testing.T) {
 			name: "disconnected graph",
 			digraph: map[string][]string{
 				"a": {"b"},
-				"c": {"d"},
+				"c": {"d", "e"},
 				"d": {},
-				"b": {},
+				"b": {"c"},
 			},
-			expected: []string{"a", "b", "c", "d"},
+			expected: []string{"a", "b", "c", "d", "e"},
 			hasError: false,
 		},
 	}
